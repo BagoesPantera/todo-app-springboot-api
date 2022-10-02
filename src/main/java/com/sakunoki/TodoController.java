@@ -20,12 +20,12 @@ public class TodoController {
     }
 
     @GetMapping("/todo/{id}")
-    public ResponseEntity<Todo> findOne(@PathVariable Integer id){
+    public ResponseEntity<?> findOne(@PathVariable Integer id){
         try{
             Todo todo = service.findOne(id);
-            return new ResponseEntity<Todo>(todo, HttpStatus.OK);
+            return new ResponseEntity<>(todo, HttpStatus.OK);
         }catch (NoSuchElementException e){
-            return new ResponseEntity<Todo>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Data not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -45,7 +45,18 @@ public class TodoController {
 
             return new ResponseEntity<>("Data updated successfully",HttpStatus.OK);
         }catch (NoSuchElementException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Data not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/todo/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id){
+        try{
+            Todo todo = service.findOne(id);
+            service.delete(id);
+            return new ResponseEntity<>("Data deleted successfully", HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>("Data not found", HttpStatus.NOT_FOUND);
         }
     }
 }
